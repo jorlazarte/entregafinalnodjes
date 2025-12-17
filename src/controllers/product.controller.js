@@ -4,10 +4,6 @@ import fs from 'fs/promises';
 import path, { dirname, join } from 'path'
 
 const getAll = async (req, res) => {
-
-	//const {name, price} = req.body
-
-	console.log('controller - getAll')
 	
 	const products = await productModel.getAll()
 
@@ -20,27 +16,20 @@ const getAll = async (req, res) => {
 
 const create = async (req, res) => {
 
-	/*if (req.body === undefined) {
-		console.log('req.body === undefined')
-		return res.status(400).json({
-			error: 'Datos incompletos',
-			message: 'Los campos "name" y "price" son requeridos'
-		});
-	}else{*/
+
 		const {name, price, description, categories} = req.body
 
 		if(name === undefined || price === undefined){
-			console.log('req.body === undefined')
+
 			return res.status(400).json({
 				error: 'Datos undefined',
 				message: 'Los campos "name" y "price" son requeridos si o si'
 			});
 		}else{
-			console.log('valores enviados', name, price)
-			console.log('controller - createProduct', name, price)
+
 			const newProduct = await productModel.create({name, price, description, categories})
 
-			console.log('newProduct', newProduct)
+
 		    return res.status(401).json({
 		    	success: true,
 		        message: 'create ok',
@@ -48,13 +37,10 @@ const create = async (req, res) => {
 		    });
 		}
 
-
-	//}
 }
 
 const deleteProd = async (req, res) => {
 	const id = req.params.id
-    console.log('services deleteProduct', id)
     
     try {   
 
@@ -62,7 +48,6 @@ const deleteProd = async (req, res) => {
         
 
         if( productDel.success ){
-	        console.log('controller controller', productDel)
 
 		    return res.status(401).json({
 		    	success: true,
@@ -77,7 +62,6 @@ const deleteProd = async (req, res) => {
         }
         
     } catch (error) {
-        console.error('Error en service - deleteProd:', error)
         return {
             success: false,
             data: null,
@@ -89,7 +73,6 @@ const deleteProd = async (req, res) => {
 const updateProd = async (req, res) => {
 	const { id } = req.params
 	const updates = req.body;
-    console.log('controller updateProd', id, updates)
 
     if( !id ){
 			return res.status(404).json({
@@ -117,7 +100,6 @@ const updateProd = async (req, res) => {
         }
         
     } catch (error) {
-        console.error('Error en service - updateProd:', error)
         return {
             success: false,
             data: null,

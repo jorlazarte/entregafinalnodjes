@@ -16,7 +16,6 @@ const getAll = async () => {
 
 const getProductById = async (id) => {
     try {
-        console.log('model product__', id)
         const prodRef = doc(prodsColl, id)
         const snapshot = await getDoc(prodRef)
 
@@ -50,8 +49,6 @@ const create = async (data) => {
 
 const updateProd = async (id, data) => {
 
-    console.log('model updateProduct id', id, data)
-
     try {
         const prodRef = doc(db, 'products', id);
         
@@ -81,7 +78,6 @@ const updateProd = async (id, data) => {
 
 const deleteProd = async ( id ) => {
 
-    console.log('model deleteProduct id', id)
     try {
         const productRef = doc(db, 'products', id);
         const snapshot = await getDoc(productRef);
@@ -91,7 +87,6 @@ const deleteProd = async ( id ) => {
         }
         
         const prodDel = await deleteDoc(productRef);
-        console.log('Producto eliminado', prodDel);
 
         return {success: true}
 
