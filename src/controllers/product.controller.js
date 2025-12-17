@@ -69,6 +69,11 @@ const deleteProd = async (req, res) => {
 		        message: 'delete ok'
 		    });
 
+        }else{
+		    return res.status(404).json({
+		    	success: false,
+		        message: productDel.error
+		    });
         }
         
     } catch (error) {
@@ -82,53 +87,33 @@ const deleteProd = async (req, res) => {
 }
 
 const updateProd = async (req, res) => {
-	const id = req.params.id
-    console.log('controller updateProd', id)
+	const { id } = req.params
+	const updates = req.body;
+    console.log('controller updateProd', id, updates)
 
-    const updates = req.body;
-
-    console.log('updates', updates) 
-
-    if( 
-		(!updates.name || updates.name === undefined) || 
-		(!updates.description || updates.description === undefined)
-	){
-    	
-    	if(!updates.name || updates.name === undefined){
-	    	console.log('nombre del producto es requerido11')
-
-	        return res.status(401).json({
-	            success: false,
-	            message: "nombre del producto es requerido"
-	        })
-
-    	}
-
-    	if(!updates.description || updates.description === undefined){
-	    	console.log('description del producto es requerido11')
-
-	        return res.status(401).json({
-	            success: false,
-	            message: "description del producto es requerido"
-	        })
-    		
-    	}
-
+    if( !id ){
+			return res.status(404).json({
+		    	success: false,
+		        message: 'update error'
+		    })
     }
-
     
     try {   
 
-        const productDel = await productModel.updateProd( id )
+        const productUpd = await productModel.updateProd( id, updates )
         
-        if( productDel.success ){
-	        console.log('deleteProduct controller', productDel)
+        if( productUpd.success ){
 
 		    return res.status(401).json({
 		    	success: true,
 		        message: 'update ok'
 		    });
 
+        }else{
+		    return res.status(404).json({
+		    	success: false,
+		        message: productUpd.error
+		    });
         }
         
     } catch (error) {
@@ -139,7 +124,7 @@ const updateProd = async (req, res) => {
             message: "Error al eliminar el producto"
         }
     }
-    */
+    
 }
 
 export const productController = {getAll, create, deleteProd, updateProd}

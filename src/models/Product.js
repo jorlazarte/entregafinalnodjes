@@ -48,40 +48,29 @@ const create = async (data) => {
     }
 }
 
-const updateProduct = async (data) => {
+const updateProd = async (id, data) => {
 
-    console.log('model updateProduct id', data.id)
+    console.log('model updateProduct id', id, data)
 
     try {
-        // Referencia al documento
-        console.log('model product__', data.id)
-        const prodRef = doc(db, 'products', data.id);
+        const prodRef = doc(db, 'products', id);
         
-        // Verificar si el documento existe
         const snapshot = await getDoc(prodRef);
 
         if (!snapshot.exists()) {
-            //return res.status(404).json({ error: 'Producto no encontrado' });
+            return {
+                success: false,
+                error: "id no existe"
+            }
         }
 
-        const updatedProd = {
-                name: data.name,
-                description: data.description,
-                price: Number(data.price),
-                categories: Array.isArray(data.categories) ? data.categories : [], //,
-                image: data.image,
-                updatedAt: serverTimestamp()
-            }
-
-        console.log('updatedProd', updatedProd)
-        await updateDoc(prodRef, updatedProd);
-
-        const updatedSnapshot = await getDoc(prodRef);
-
+        await updateDoc(prodRef, data)
+        
         return {
-            id: updatedSnapshot.id,
-            ...updatedSnapshot.data()
-        };
+            success: true,
+            updatedid: id,
+            updatedFields: data
+        }
 
     } catch (error) {
         console.error('Error en model - create:', error)
@@ -98,7 +87,7 @@ const deleteProd = async ( id ) => {
         const snapshot = await getDoc(productRef);
         
         if (!snapshot.exists()) {
-          throw new Error('Producto no encontrado');
+          return {success: false, error: "id no encontrado"}
         }
         
         const prodDel = await deleteDoc(productRef);
@@ -112,27 +101,4 @@ const deleteProd = async ( id ) => {
         
 }
 
-const updateProd = async ( id ) => {
-
-    console.log('model updateProd id', id)
-    /*
-    try {
-        const productRef = doc(db, 'products', id);
-        const snapshot = await getDoc(productRef);
-        
-        if (!snapshot.exists()) {
-          throw new Error('Producto no encontrado');
-        }
-        
-        const prodDel = await deleteDoc(productRef);
-        console.log('Producto eliminado', prodDel);
-
-        return {success: true}
-
-      } catch (error) {
-        console.error('Error:', error.message);
-      }
-      */
-        
-}
 export const productModel = {getAll, create, deleteProd, updateProd }
